@@ -1,6 +1,7 @@
 package com;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -15,7 +16,8 @@ public class ControllerTest {
     @Autowired
     Step step;
 
-    public void callByBean(){
+    @Bean
+    private void callByBean(){
 
         if (route != null){
             route.getId();

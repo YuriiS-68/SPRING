@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.persistence.*;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class Item {
     @Id
     @SequenceGenerator(name = "IT_SQ", sequenceName = "ITEM_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "IT_SQ")
-    public Long getId() {
+    Long getId() {
         return id;
     }
     
@@ -53,6 +54,26 @@ public class Item {
         return description;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public void setLastUpdateDate(Date lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @JsonCreator
     public static Item createFromJson(String jsonString){
         
@@ -72,24 +93,37 @@ public class Item {
         return item;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    void validationObject(Item item) throws BadRequestException {
+
+        Class cls = item.getClass();
+
+        Field[] fields = cls.getDeclaredFields();
+
+        checkFields(fields, item);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    void validationObjectForSave(Item item) throws BadRequestException {
+
+        Class cls = item.getClass();
+
+        Field[] fields = cls.getDeclaredFields();
+
+        fields[0] = null;
+
+        checkFields(fields, item);
     }
 
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
+    private void checkFields(Field[] fields, Item item)throws BadRequestException{
 
-    public void setLastUpdateDate(Date lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        for (Field field : fields) {
+            try {
+                if (field != null && field.get(item) == null) {
+                    throw new BadRequestException("Check the entered data. One of the object fields is missing.");
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

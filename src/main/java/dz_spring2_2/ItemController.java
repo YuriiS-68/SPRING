@@ -11,26 +11,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 @Controller
 public class ItemController {
 
     @Autowired
-    private ItemService itemService;
+    Item item;
+
+    @Autowired
+    ItemService itemService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/saveItem", produces = "text/plain")
     @ResponseBody
     public String save(HttpServletRequest req)throws IOException{
 
-        Item item = mappingObject(req);
+        item = mappingObject(req);
 
         if (item.getId() == null){
-
             try {
 
-                validationObject(getFieldsItem(item));
+                item.validationObjectForSave(item);
 
                 itemService.save(item);
 
@@ -52,11 +52,11 @@ public class ItemController {
     @ResponseBody
     public String update(HttpServletRequest req)throws IOException{
 
-        Item item = mappingObject(req);
+        item = mappingObject(req);
 
         try {
 
-            validationObject(getFieldsItem(item));
+            item.validationObject(item);
 
         } catch (BadRequestException e) {
             e.printStackTrace();
@@ -68,7 +68,6 @@ public class ItemController {
             if (findById(item.getId()) != null){
 
                 itemService.update(item);
-
             }else
                 return "Updating is not possible. Item with id - " + item.getId() +
                         " is missing in the database.";
@@ -84,7 +83,6 @@ public class ItemController {
     @RequestMapping(method = RequestMethod.GET, value = "/item", produces = "text/plain")
     @ResponseBody
     public String getAll(){
-
         try {
 
             return itemService.getAllFiles().toString();
@@ -100,7 +98,6 @@ public class ItemController {
     public String delete(Long id){
 
         if (findById(id) != null){
-
             try {
 
                 itemService.delete(id);
@@ -150,16 +147,34 @@ public class ItemController {
         return null;
     }
 
-    private void validationObject(List<String> list)throws BadRequestException{
+    /*private void validationObject(Item item) throws BadRequestException {
 
-        for (String field : list){
-            if (field == null || field.equals("null")){
-                throw new BadRequestException("Check the entered data. One of the object fields is missing.");
+        System.out.println("Input item - " + item);
+
+        Class cls = item.getClass();
+
+        Field[] fields = cls.getDeclaredFields();
+
+        System.out.println("Fields in List: " + Arrays.toString(fields));
+
+        for (Field field : fields) {
+            try {
+                if (field.get(item) == null) {
+
+                    //System.out.println("Field value in loop: - " + field.get(item));
+
+                    //System.out.println("Field in loop: - " + field);
+                    throw new BadRequestException("Check the entered data. One of the object fields is missing.");
+                }
+                //else
+                //    throw new BadRequestException("Check the entered data. One of the object fields is missing.");
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
-    }
+    }*/
 
-    private List<String> getFieldsItem(Item item)throws BadRequestException{
+    /*private List<String> getFieldsItem(Item item)throws BadRequestException{
         if (item == null)
             throw new BadRequestException("Item is not existing");
 
@@ -171,5 +186,5 @@ public class ItemController {
         fields.add(item.getDescription());
 
         return fields;
-    }
+    }*/
 }
