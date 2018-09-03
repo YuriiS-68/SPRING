@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.persistence.*;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -91,39 +90,6 @@ public class Item {
         }
         
         return item;
-    }
-
-    void validationObject(Item item) throws BadRequestException {
-
-        Class cls = item.getClass();
-
-        Field[] fields = cls.getDeclaredFields();
-
-        checkFields(fields, item);
-    }
-
-    void validationObjectForSave(Item item) throws BadRequestException {
-
-        Class cls = item.getClass();
-
-        Field[] fields = cls.getDeclaredFields();
-
-        fields[0] = null;
-
-        checkFields(fields, item);
-    }
-
-    private void checkFields(Field[] fields, Item item)throws BadRequestException{
-
-        for (Field field : fields) {
-            try {
-                if (field != null && field.get(item) == null) {
-                    throw new BadRequestException("Check the entered data. One of the object fields is missing.");
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override

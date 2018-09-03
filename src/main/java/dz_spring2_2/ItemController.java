@@ -30,7 +30,7 @@ public class ItemController {
         if (item.getId() == null){
             try {
 
-                item.validationObjectForSave(item);
+                validationObject(item);
 
                 itemService.save(item);
 
@@ -56,18 +56,12 @@ public class ItemController {
 
         try {
 
-            item.validationObject(item);
-
-        } catch (BadRequestException e) {
-            e.printStackTrace();
-            return String.valueOf(e);
-        }
-
-        try {
-
             if (findById(item.getId()) != null){
 
+                validationObject(item);
+
                 itemService.update(item);
+
             }else
                 return "Updating is not possible. Item with id - " + item.getId() +
                         " is missing in the database.";
@@ -75,6 +69,9 @@ public class ItemController {
         }catch (HibernateException e){
             System.err.println(e.getMessage());
             throw new HibernateException("Operation failed");
+        }catch (BadRequestException e) {
+            e.printStackTrace();
+            return String.valueOf(e);
         }
 
         return "Object with id " + item.getId() + " updated successfully.";
@@ -147,44 +144,10 @@ public class ItemController {
         return null;
     }
 
-    /*private void validationObject(Item item) throws BadRequestException {
+    private void validationObject(Item item) throws BadRequestException {
 
-        System.out.println("Input item - " + item);
+        if (item.getName() == null || item.getDateCreated() == null || item.getLastUpdateDate() == null || item.getDescription() == null)
+            throw new BadRequestException("Check the entered data. One of the object fields is missing.");
+    }
 
-        Class cls = item.getClass();
-
-        Field[] fields = cls.getDeclaredFields();
-
-        System.out.println("Fields in List: " + Arrays.toString(fields));
-
-        for (Field field : fields) {
-            try {
-                if (field.get(item) == null) {
-
-                    //System.out.println("Field value in loop: - " + field.get(item));
-
-                    //System.out.println("Field in loop: - " + field);
-                    throw new BadRequestException("Check the entered data. One of the object fields is missing.");
-                }
-                //else
-                //    throw new BadRequestException("Check the entered data. One of the object fields is missing.");
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
-
-    /*private List<String> getFieldsItem(Item item)throws BadRequestException{
-        if (item == null)
-            throw new BadRequestException("Item is not existing");
-
-        List<String> fields = new LinkedList<>();
-
-        fields.add(item.getName());
-        fields.add(String.valueOf(item.getDateCreated()));
-        fields.add(String.valueOf(item.getLastUpdateDate()));
-        fields.add(item.getDescription());
-
-        return fields;
-    }*/
 }
