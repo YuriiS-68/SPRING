@@ -18,8 +18,4 @@
         <!--<constructor-arg name="name" value="value"/>-->
     </bean>
 
-    <bean id="item" class="dz_spring2_2.Item">
-        <!--<constructor-arg name="name" value="value"/>-->
-    </bean>
-
 </beans>
