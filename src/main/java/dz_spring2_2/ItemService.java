@@ -70,4 +70,8 @@ public class ItemService {
             throw new HibernateException("Operation failed");
         }
     }
+
+    public void setItemDAO(ItemDAO itemDAO) {
+        this.itemDAO = itemDAO;
+    }
 }

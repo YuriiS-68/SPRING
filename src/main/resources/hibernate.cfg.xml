@@ -11,6 +11,8 @@
 
         <property name="show_sql">true</property>
         <mapping class="dz_spring2_2.Item"></mapping>
+        <mapping class="dz_spring3.File"></mapping>
+        <mapping class="dz_spring3.Storage"></mapping>
     </session-factory>
 
     <!--<open_tag params>value</open_tag>-->

@@ -1,4 +1,4 @@
-package com;
+package com.lesson2;
 
 import java.util.List;
 

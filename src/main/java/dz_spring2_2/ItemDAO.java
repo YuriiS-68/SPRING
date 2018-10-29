@@ -27,6 +27,8 @@ public class ItemDAO {
 
             session.save(item);
 
+            System.out.println("Class DAO, ID item - " + item.getId());
+
             transaction.commit();
 
         }catch (HibernateException e){
@@ -145,4 +147,5 @@ public class ItemDAO {
         }
         return sessionFactory;
     }
+
 }

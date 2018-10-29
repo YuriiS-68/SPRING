@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,12 +23,14 @@ public class ItemController {
 
         Item item = mappingObject(req);
 
+        System.out.println("Controller, ID Item after mapping - " + item.getId());
+
         if (checkId(item))
             return "Item with id " + item.getId() + " can`t be registered in the database";
 
         try {
 
-            validationFieldObject(item);
+            validationFieldsObject(item);
 
         }catch (BadRequestException e) {
             e.printStackTrace();
@@ -50,7 +51,7 @@ public class ItemController {
             if (findById(item.getId()) != null){
                 try {
 
-                    validationFieldObject(item);
+                    validationFieldsObject(item);
 
                 }catch (BadRequestException e) {
                     e.printStackTrace();
@@ -111,14 +112,17 @@ public class ItemController {
         return itemService.findById(id);
     }
 
-    private void validationFieldObject(Item item) throws BadRequestException {
+    private void validationFieldsObject(Item item) throws BadRequestException {
 
         if (item.getName() == null || item.getDateCreated() == null || item.getLastUpdateDate() == null || item.getDescription() == null)
             throw new BadRequestException("Check the entered data. One of the object fields is missing.");
     }
 
     private boolean checkId(Item item){
+        return item.getId() != null;
+    }
 
-        return item.getId() != null && item.getId() != 0;
+    public void setItemService(ItemService itemService) {
+        this.itemService = itemService;
     }
 }
