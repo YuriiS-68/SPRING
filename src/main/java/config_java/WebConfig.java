@@ -18,7 +18,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
         servletContext.addListener(new ContextLoaderListener(rootContext));
 
         AnnotationConfigWebApplicationContext servletAppContext = new AnnotationConfigWebApplicationContext();
-        servletAppContext.register(AppContext.class);
+        servletAppContext.register(AppConfig.class);
 
         DispatcherServlet dispatcherServlet = new DispatcherServlet(servletAppContext);
         dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
