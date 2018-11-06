@@ -26,20 +26,15 @@ public class ItemController {
     String save(HttpServletRequest req)throws Exception{
         Item item = mappingItem(req);
 
-        try {
-            if (item == null)
-                throw new BadRequestException("Item does not exist.");
+        if (item == null)
+            throw new BadRequestException("Item does not exist.");
 
-            if (item.getId() != null){
-                throw new BadRequestException("This Item with ID - " + item.getId() + " can not save in DB.");
-            }
-            else
-                itemDAO.save(item);
-
-        }catch (BadRequestException e){
-            e.printStackTrace();
-            throw e;
+        if (item.getId() != null){
+            throw new BadRequestException("This Item with ID - " + item.getId() + " can not save in DB.");
         }
+        else
+            itemDAO.save(item);
+
         return "ok";
     }
 
@@ -48,20 +43,15 @@ public class ItemController {
     String update(HttpServletRequest req)throws Exception{
         Item item = mappingItem(req);
 
-        try {
-            if (item == null)
-                throw new BadRequestException("Item does not exist.");
+        if (item == null)
+            throw new BadRequestException("Item does not exist.");
 
-            if (itemDAO.findById(item.getId()) == null){
-                throw new BadRequestException("Item with ID - " + item.getId() + " does not exist in the DB.");
-            }
-            else
-                itemDAO.update(item);
-
-        }catch (BadRequestException e){
-            e.printStackTrace();
-            throw e;
+        if (itemDAO.findById(item.getId()) == null){
+            throw new BadRequestException("Item with ID - " + item.getId() + " does not exist in the DB.");
         }
+        else
+            itemDAO.update(item);
+
         return "ok";
     }
 
@@ -72,17 +62,12 @@ public class ItemController {
         Item item = itemDAO.findById(Long.parseLong(req.getParameter("itemId")));
         long itemId = Long.parseLong(req.getParameter("itemId"));
 
-        try {
-            if (item == null){
-                throw new BadRequestException("The Item with ID " + itemId + " does not exist in the DB.");
-            }
-            else
-                itemDAO.delete(item.getId());
-
-        }catch (BadRequestException e){
-            e.printStackTrace();
-            throw e;
+        if (item == null){
+            throw new BadRequestException("The Item with ID " + itemId + " does not exist in the DB.");
         }
+        else
+            itemDAO.delete(item.getId());
+
         return "ok";
     }
 
