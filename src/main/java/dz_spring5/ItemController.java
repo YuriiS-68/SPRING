@@ -23,18 +23,23 @@ public class ItemController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/item/save", produces = "text/plain")
     public @ResponseBody
-    String save(HttpServletRequest req)throws IOException{
+    String save(HttpServletRequest req)throws Exception{
         Item item = mappingItem(req);
 
-        if (item == null)
-            return "Item does not exist.";
+        try {
+            if (item == null)
+                throw new BadRequestException("Item does not exist.");
 
-        if (item.getId() != null){
-            return "This Item with ID - " + item.getId() + " can not save in DB.";
+            if (item.getId() != null){
+                throw new BadRequestException("This Item with ID - " + item.getId() + " can not save in DB.");
+            }
+            else
+                itemDAO.save(item);
+
+        }catch (BadRequestException e){
+            e.printStackTrace();
+            throw e;
         }
-        else
-            itemDAO.save(item);
-
         return "ok";
     }
 
@@ -43,31 +48,41 @@ public class ItemController {
     String update(HttpServletRequest req)throws Exception{
         Item item = mappingItem(req);
 
-        if (item == null)
-            return "Item does not exist.";
+        try {
+            if (item == null)
+                throw new BadRequestException("Item does not exist.");
 
-        if (itemDAO.findById(item.getId()) == null){
-            return "Item with ID - " + item.getId() + " does not exist in the DB.";
+            if (itemDAO.findById(item.getId()) == null){
+                throw new BadRequestException("Item with ID - " + item.getId() + " does not exist in the DB.");
+            }
+            else
+                itemDAO.update(item);
+
+        }catch (BadRequestException e){
+            e.printStackTrace();
+            throw e;
         }
-        else
-            itemDAO.update(item);
-
         return "ok";
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/item/delete", produces = "text/plain")
     public @ResponseBody
-    String delete(HttpServletRequest req){
+    String delete(HttpServletRequest req)throws Exception{
 
         Item item = itemDAO.findById(Long.parseLong(req.getParameter("itemId")));
         long itemId = Long.parseLong(req.getParameter("itemId"));
 
-        if (item == null){
-            return "The Item with ID " + itemId + " does not exist in the DB.";
-        }
-        else
-            itemDAO.delete(item.getId());
+        try {
+            if (item == null){
+                throw new BadRequestException("The Item with ID " + itemId + " does not exist in the DB.");
+            }
+            else
+                itemDAO.delete(item.getId());
 
+        }catch (BadRequestException e){
+            e.printStackTrace();
+            throw e;
+        }
         return "ok";
     }
 
