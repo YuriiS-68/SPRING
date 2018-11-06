@@ -26,17 +26,12 @@ public class ItemController {
     String save(HttpServletRequest req)throws IOException{
         Item item = mappingItem(req);
 
-        try {
-            if (item.getId() == null){
-                itemDAO.save(item);
-            }
-            else
-                throw new BadRequestException("This Item with ID - " + item.getId() + " can not save in DB.");
-
-        }catch (BadRequestException e){
-            e.printStackTrace();
-            return String.valueOf(e);
+        if (item.getId() == null){
+            itemDAO.save(item);
         }
+        else
+            return "This Item with ID - " + item.getId() + " can not save in DB.";
+
         return "ok";
     }
 
@@ -45,17 +40,12 @@ public class ItemController {
     String update(HttpServletRequest req)throws Exception{
         Item item = mappingItem(req);
 
-        try {
-            if (itemDAO.findById(item.getId()) == null){
-                throw new BadRequestException("Item with ID - " + item.getId() + " does not exist in the DB.");
-            }
-            else
-                itemDAO.update(item);
-
-        }catch (BadRequestException e){
-            e.printStackTrace();
-            return String.valueOf(e);
+        if (itemDAO.findById(item.getId()) == null){
+            return "Item with ID - " + item.getId() + " does not exist in the DB.";
         }
+        else
+            itemDAO.update(item);
+
         return "ok";
     }
 
@@ -66,18 +56,13 @@ public class ItemController {
         Item item = itemDAO.findById(Long.parseLong(req.getParameter("itemId")));
         long itemId = Long.parseLong(req.getParameter("itemId"));
 
-        try {
-            if (item == null){
-                throw new BadRequestException("The Item with ID " + itemId + " does not exist in the DB.");
-            }
-            else
-                itemDAO.delete(item.getId());
-            return "ok";
-
-        }catch (BadRequestException e){
-            e.printStackTrace();
-            return String.valueOf(e);
+        if (item == null){
+            return "The Item with ID " + itemId + " does not exist in the DB.";
         }
+        else
+            itemDAO.delete(item.getId());
+
+        return "ok";
     }
 
     private Item mappingItem(HttpServletRequest req)throws IOException {
