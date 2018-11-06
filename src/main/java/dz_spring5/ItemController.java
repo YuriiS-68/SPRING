@@ -26,11 +26,14 @@ public class ItemController {
     String save(HttpServletRequest req)throws IOException{
         Item item = mappingItem(req);
 
-        if (item.getId() == null){
-            itemDAO.save(item);
+        if (item == null)
+            return "Item does not exist.";
+
+        if (item.getId() != null){
+            return "This Item with ID - " + item.getId() + " can not save in DB.";
         }
         else
-            return "This Item with ID - " + item.getId() + " can not save in DB.";
+            itemDAO.save(item);
 
         return "ok";
     }
@@ -39,6 +42,9 @@ public class ItemController {
     public @ResponseBody
     String update(HttpServletRequest req)throws Exception{
         Item item = mappingItem(req);
+
+        if (item == null)
+            return "Item does not exist.";
 
         if (itemDAO.findById(item.getId()) == null){
             return "Item with ID - " + item.getId() + " does not exist in the DB.";
