@@ -10,9 +10,9 @@ import java.sql.SQLException;
 
 public class GeneralDAO<T> {
 
-    private static final String DB_URL = "jdbc:oracle:thin:@gromcode-lesson.cjqbbseqr63c.eu-central-1.rds.amazonaws.com:1521:ORCL";
+    private static final String DB_URL = "jdbc:oracle:thin:grome.ckmizrptx9hw.eu-central-1.rds.amazonaws.com:1521:ORCL";
     private static final String USER = "main";
-    private static final String PASS = "ifgjrkzr";
+    private static final String PASS = "12345678";
 
     private static SessionFactory sessionFactory;
 

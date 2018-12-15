@@ -16,25 +16,20 @@ public class AppContext{
     @Scope("prototype")
     public ItemDAO itemDAO(){
         ItemDAO itemDAO = new ItemDAO();
-
         return itemDAO;
     }
 
     @Bean
     public ItemService itemService(){
         ItemService itemService = new ItemService();
-
         itemService.setItemDAO(itemDAO());
-
         return itemService;
     }
 
     @Bean
     public ItemController itemController(){
         ItemController itemController = new ItemController();
-
         itemController.setItemService(itemService());
-
         return itemController;
     }
 }

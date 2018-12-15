@@ -108,12 +108,10 @@ public class ItemController {
     }
 
     private Item findById(Long id){
-
         return itemService.findById(id);
     }
 
     private void validationFieldsObject(Item item) throws BadRequestException {
-
         if (item.getName() == null || item.getDateCreated() == null || item.getLastUpdateDate() == null || item.getDescription() == null)
             throw new BadRequestException("Check the entered data. One of the object fields is missing.");
     }
