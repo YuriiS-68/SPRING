@@ -25,12 +25,10 @@ public class ItemDAO {
     }
 
     public void delete(Long id){
-
         entityManager.remove(findById(id));
     }
 
     public Item findById(Long id){
-
         return entityManager.find(Item.class, id);
     }
 

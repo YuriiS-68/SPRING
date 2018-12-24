@@ -3,9 +3,7 @@ package dz_spring7.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -18,7 +16,7 @@ public class User extends IdEntity {
     private Long id;
     private String name;
     private String password;
-    private List<Message> messages;
+    private List<Ad> ads;
 
     public User() {
     }
@@ -43,10 +41,10 @@ public class User extends IdEntity {
     }
 
     @JsonIgnore
-    @JsonProperty(value = "messages")
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, targetEntity = Message.class)
-    public List<Message> getMessages() {
-        return messages;
+    @JsonProperty(value = "ads")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, targetEntity = Ad.class)
+    public List<Ad> getAds() {
+        return ads;
     }
 
     @JsonCreator
@@ -74,8 +72,8 @@ public class User extends IdEntity {
         this.password = password;
     }
 
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
+    public void setAds(List<Ad> ads) {
+        this.ads = ads;
     }
 
     @Override
@@ -86,12 +84,12 @@ public class User extends IdEntity {
         return Objects.equals(id, user.id) &&
                 Objects.equals(name, user.name) &&
                 Objects.equals(password, user.password) &&
-                Objects.equals(messages, user.messages);
+                Objects.equals(ads, user.ads);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, password, messages);
+        return Objects.hash(id, name, password, ads);
     }
 
     @Override
@@ -100,7 +98,7 @@ public class User extends IdEntity {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
-                ", messages=" + messages +
+                ", ads=" + ads +
                 '}';
     }
 }

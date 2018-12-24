@@ -14,7 +14,7 @@
         <mapping class="dz_spring3.File"></mapping>
         <mapping class="dz_spring3.Storage"></mapping>
         <!--<mapping class="dz_spring7.model.User"></mapping>
-        <mapping class="dz_spring7.model.Message"></mapping>-->
+        <mapping class="dz_spring7.model.Adapping>-->
     </session-factory>
 
     <!--<open_tag params>value</open_tag>-->

@@ -13,7 +13,7 @@ import java.util.Objects;
 @Table(name = "CATEGORY_MESSAGE")
 public class Category extends IdEntity{
     private Long id;
-    private Message message;
+    private Ad ad;
     private String name;
     private List<Subcategory> subcategories;
 
@@ -29,12 +29,12 @@ public class Category extends IdEntity{
         return id;
     }
 
-    //@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, targetEntity = Message.class)
+    //@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, targetEntity = Ad.class)
     @ManyToOne(fetch = FetchType.LAZY)
     //@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_MESSAGE_CATEGORY")
-    public Message getMessage() {
-        return message;
+    public Ad getAd() {
+        return ad;
     }
 
     @Column(name = "CATEGORY_NAME", nullable = false)
@@ -66,8 +66,8 @@ public class Category extends IdEntity{
         this.id = id;
     }
 
-    public void setMessage(Message message) {
-        this.message = message;
+    public void setAd(Ad ad) {
+        this.ad = ad;
     }
 
     public void setName(String name) {
@@ -84,21 +84,21 @@ public class Category extends IdEntity{
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
         return Objects.equals(id, category.id) &&
-                Objects.equals(message, category.message) &&
+                Objects.equals(ad, category.ad) &&
                 Objects.equals(name, category.name) &&
                 Objects.equals(subcategories, category.subcategories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, message, name, subcategories);
+        return Objects.hash(id, ad, name, subcategories);
     }
 
     @Override
     public String toString() {
         return "Category{" +
                 "id=" + id +
-                ", message=" + message +
+                ", ad=" + ad +
                 ", name='" + name + '\'' +
                 ", subcategories=" + subcategories +
                 '}';

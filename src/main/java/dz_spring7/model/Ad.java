@@ -11,16 +11,16 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "MESSAGE")
-public class Message extends IdEntity{
+public class Ad extends IdEntity{
     private Long id;
     private User user;
     private String name;
     private String description;
-    private int price;
+    private Integer price;
     private CurrencyType currencyType;
     private List<Category> categories;
 
-    public Message() {
+    public Ad() {
     }
 
     @Id
@@ -49,7 +49,7 @@ public class Message extends IdEntity{
     }
 
     @Column(name = "PRICE", nullable = false)
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
@@ -66,16 +66,16 @@ public class Message extends IdEntity{
     }
 
     @JsonCreator
-    public static Message createFromJson(String jsonString){
+    public static Ad createFromJson(String jsonString){
         ObjectMapper objectMapper = new ObjectMapper();
-        Message message = null;
+        Ad ad = null;
 
         try {
-            message = objectMapper.readValue(jsonString, Message.class);
+            ad = objectMapper.readValue(jsonString, Ad.class);
         }catch (IOException e){
             e.printStackTrace();
         }
-        return message;
+        return ad;
     }
 
     public void setId(Long id) {
@@ -94,7 +94,7 @@ public class Message extends IdEntity{
         this.description = description;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -110,14 +110,14 @@ public class Message extends IdEntity{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Message message = (Message) o;
-        return price == message.price &&
-                Objects.equals(id, message.id) &&
-                Objects.equals(user, message.user) &&
-                Objects.equals(name, message.name) &&
-                Objects.equals(description, message.description) &&
-                currencyType == message.currencyType &&
-                Objects.equals(categories, message.categories);
+        Ad ad = (Ad) o;
+        return price.equals(ad.price) &&
+                Objects.equals(id, ad.id) &&
+                Objects.equals(user, ad.user) &&
+                Objects.equals(name, ad.name) &&
+                Objects.equals(description, ad.description) &&
+                currencyType == ad.currencyType &&
+                Objects.equals(categories, ad.categories);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class Message extends IdEntity{
 
     @Override
     public String toString() {
-        return "Message{" +
+        return "Ad{" +
                 "id=" + id +
                 ", user=" + user +
                 ", name='" + name + '\'' +

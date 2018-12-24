@@ -1,11 +1,10 @@
 package config_java;
 
-import dz_spring7.controller.MessageController;
+import dz_spring7.controller.AdController;
 import dz_spring7.controller.UserController;
-import dz_spring7.dao.GeneralDAO;
-import dz_spring7.dao.MessageDAO;
+import dz_spring7.dao.AdDAO;
 import dz_spring7.dao.UserDAO;
-import dz_spring7.service.MessageService;
+import dz_spring7.service.AdService;
 import dz_spring7.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,28 +20,18 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.persistence.EntityManagerFactory;
 
 @Configuration
-@EnableTransactionManagement
+@EnableTransactionManagement(proxyTargetClass = true)
 @ComponentScan("dz_spring7")
 public class AppConfig {
 
     @Bean
-    public GeneralDAO generalDAO(){
-        GeneralDAO generalDAO = new GeneralDAO();
-        return generalDAO;
-    }
-
-    @Bean
     public UserDAO userDAO(){
-        UserDAO userDAO = new UserDAO(generalDAO());
-        userDAO.setGeneralDAO(generalDAO());
-        return userDAO;
+        return new UserDAO();
     }
 
     @Bean
-    public MessageDAO messageDAO(){
-        MessageDAO messageDAO = new MessageDAO(generalDAO());
-        messageDAO.setGeneralDAO(generalDAO());
-        return messageDAO;
+    public AdDAO messageDAO(){
+        return new AdDAO();
     }
 
     @Bean
@@ -53,18 +42,18 @@ public class AppConfig {
     }
 
     @Bean
-    public MessageService messageService(){
-        MessageService messageService = new MessageService(messageDAO());
-        messageService.setMessageDAO(messageDAO());
-        return messageService;
+    public AdService messageService(){
+        AdService adService = new AdService(messageDAO());
+        adService.setAdDAO(messageDAO());
+        return adService;
     }
 
     @Bean
-    public MessageController messageController(){
-        MessageController messageController = new MessageController(messageService(), messageDAO());
-        messageController.setMessageService(messageService());
-        messageController.setMessageDAO(messageDAO());
-        return messageController;
+    public AdController messageController(){
+        AdController adController = new AdController(messageService(), messageDAO());
+        adController.setAdService(messageService());
+        adController.setAdDAO(messageDAO());
+        return adController;
     }
 
     @Bean

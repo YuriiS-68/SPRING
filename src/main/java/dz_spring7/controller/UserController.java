@@ -47,15 +47,26 @@ public class UserController {
     public @ResponseBody
     String delete(HttpServletRequest req)throws BadRequestException{
         User user = userDAO.findById(Long.parseLong(req.getParameter("userId")));
+        long userId = Long.parseLong(req.getParameter("userId"));
 
         try {
-            userService.delete(user.getId());
-
+            if (user == null){
+                return "The User with ID " + userId + " does not exist in the DB.";
+            }
+            else {
+                userService.delete(user.getId());
+            }
         }catch (BadRequestException e){
             System.err.println(e.getMessage());
             throw e;
         }
         return "User deleted success";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/users", produces = "text/plain")
+    @ResponseBody
+    public String getAll()throws BadRequestException{
+        return userService.getUsers().toString();
     }
 
     private User mappingUser(HttpServletRequest req)throws IOException{
