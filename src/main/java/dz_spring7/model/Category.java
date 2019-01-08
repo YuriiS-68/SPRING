@@ -8,13 +8,15 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 @Entity
-@Table(name = "CATEGORY_MESSAGE")
+@Table(name = "CATEGORY_AD")
 public class Category extends IdEntity{
     private Long id;
     private Ad ad;
     private String name;
+    private SubcategoryType subcategoryType;
     private List<Subcategory> subcategories;
 
     public Category() {
@@ -29,10 +31,8 @@ public class Category extends IdEntity{
         return id;
     }
 
-    //@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, targetEntity = Ad.class)
-    @ManyToOne(fetch = FetchType.LAZY)
-    //@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_MESSAGE_CATEGORY")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_AD_CATEGORY")
     public Ad getAd() {
         return ad;
     }
@@ -42,8 +42,14 @@ public class Category extends IdEntity{
         return name;
     }
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "SUBCATEGORY_TYPE", nullable = false)
+    public SubcategoryType getSubcategoryType() {
+        return subcategoryType;
+    }
+
     @JsonIgnore
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, targetEntity = Subcategory.class)
+    @OneToOne(mappedBy = "category", fetch = FetchType.LAZY, targetEntity = Subcategory.class)
     public List<Subcategory> getSubcategories() {
         return subcategories;
     }
@@ -74,6 +80,10 @@ public class Category extends IdEntity{
         this.name = name;
     }
 
+    public void setSubcategoryType(SubcategoryType subcategoryType) {
+        this.subcategoryType = subcategoryType;
+    }
+
     public void setSubcategories(List<Subcategory> subcategories) {
         this.subcategories = subcategories;
     }
@@ -83,24 +93,26 @@ public class Category extends IdEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(id, category.id) &&
-                Objects.equals(ad, category.ad) &&
-                Objects.equals(name, category.name) &&
-                Objects.equals(subcategories, category.subcategories);
+        return id.equals(category.id) &&
+                ad.equals(category.ad) &&
+                name.equals(category.name) &&
+                subcategoryType == category.subcategoryType &&
+                subcategories.equals(category.subcategories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ad, name, subcategories);
+        return Objects.hash(id, ad, name, subcategoryType, subcategories);
     }
 
     @Override
     public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", ad=" + ad +
-                ", name='" + name + '\'' +
-                ", subcategories=" + subcategories +
-                '}';
+        return new StringJoiner(", ", Category.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("ad=" + ad)
+                .add("name='" + name + "'")
+                .add("subcategoryType=" + subcategoryType)
+                .add("subcategories=" + subcategories)
+                .toString();
     }
 }

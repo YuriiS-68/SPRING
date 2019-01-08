@@ -6,8 +6,6 @@ import dz_spring7.model.Ad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class AdService {
 
@@ -32,7 +30,6 @@ public class AdService {
         if (ad == null){
             throw new BadRequestException("Ad is not exist");
         }
-
         validFields(ad);
         adDAO.update(ad);
     }
@@ -41,22 +38,13 @@ public class AdService {
         if (id == null){
             throw new BadRequestException("Input id is not exist");
         }
-
         adDAO.delete(id);
-    }
-
-    public List<Ad> getAdes()throws BadRequestException{
-        if (adDAO.findAll() == null) {
-            throw new BadRequestException("List is not exist.");
-        }
-        return adDAO.findAll();
     }
 
     private void validFields(Ad ad)throws BadRequestException {
         if (ad == null){
             throw new BadRequestException("Ad is not exist");
         }
-
         if (ad.getId() == null || ad.getUser() == null || ad.getName() == null ||
                 ad.getDescription() == null || ad.getPrice() == null || ad.getCurrencyType() == null){
             throw new BadRequestException("Check the entered data. One of the object fields is missing.");

@@ -5,9 +5,9 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-        <property name="hibernate.connection.url">jdbc:oracle:thin:@grome.ckmizrptx9hw.eu-central-1.rds.amazonaws.com:1521:ORCL</property>
+        <property name="hibernate.connection.url">jdbc:oracle:thin:@gc-test.c4lz1tpzgnkv.eu-central-1.rds.amazonaws.com:1521:ORCL</property>
         <property name="hibernate.connection.username">main</property>
-        <property name="hibernate.connection.password">12345678</property>
+        <property name="hibernate.connection.password">ifgjrkzr</property>
 
         <property name="show_sql">true</property>
         <mapping class="dz_spring2_2.Item"></mapping>

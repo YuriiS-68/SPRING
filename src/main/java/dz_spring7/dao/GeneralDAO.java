@@ -10,10 +10,9 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 @Repository
-@Transactional//(propagation = Propagation.REQUIRED, readOnly = true, noRollbackFor = Exception.class)
+@Transactional
 public abstract class GeneralDAO <T extends IdEntity> implements GenericEntityDAO<T>{
 
     @PersistenceContext
@@ -41,11 +40,6 @@ public abstract class GeneralDAO <T extends IdEntity> implements GenericEntityDA
 
     public T findById(Serializable id){
         return entityManager.find(getType(), id);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<T> findAll(String sql){
-        return entityManager.createNativeQuery(sql, getType()).getResultList();
     }
 
     public EntityManager getEntityManager() {

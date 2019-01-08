@@ -30,7 +30,7 @@ public class AppConfig {
     }
 
     @Bean
-    public AdDAO messageDAO(){
+    public AdDAO adDAO(){
         return new AdDAO();
     }
 
@@ -42,17 +42,17 @@ public class AppConfig {
     }
 
     @Bean
-    public AdService messageService(){
-        AdService adService = new AdService(messageDAO());
-        adService.setAdDAO(messageDAO());
+    public AdService adService(){
+        AdService adService = new AdService(adDAO());
+        adService.setAdDAO(adDAO());
         return adService;
     }
 
     @Bean
-    public AdController messageController(){
-        AdController adController = new AdController(messageService(), messageDAO());
-        adController.setAdService(messageService());
-        adController.setAdDAO(messageDAO());
+    public AdController adController(){
+        AdController adController = new AdController(adService(), adDAO());
+        adController.setAdService(adService());
+        adController.setAdDAO(adDAO());
         return adController;
     }
 
@@ -81,9 +81,9 @@ public class AppConfig {
     public DriverManagerDataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-        dataSource.setUrl("jdbc:oracle:thin:@grome.ckmizrptx9hw.eu-central-1.rds.amazonaws.com:1521:ORCL");
+        dataSource.setUrl("jdbc:oracle:thin:@gc-test.c4lz1tpzgnkv.eu-central-1.rds.amazonaws.com:1521:ORCL");
         dataSource.setUsername("main");
-        dataSource.setPassword("12345678");
+        dataSource.setPassword("ifgjrkzr");
         return dataSource;
     }
 
@@ -95,7 +95,7 @@ public class AppConfig {
         return transactionManager;
     }
 
-    /*Properties additionalProperties(){
+    /*private Properties additionalProperties(){
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle10gDialect");
 

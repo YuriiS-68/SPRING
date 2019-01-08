@@ -2,7 +2,6 @@ package dz_spring7.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.persistence.*;
@@ -41,7 +40,6 @@ public class User extends IdEntity {
     }
 
     @JsonIgnore
-    @JsonProperty(value = "ads")
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, targetEntity = Ad.class)
     public List<Ad> getAds() {
         return ads;

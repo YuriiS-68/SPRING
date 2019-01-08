@@ -1,6 +1,5 @@
 package dz_spring7.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dz_spring7.dao.UserDAO;
 import dz_spring7.execption.BadRequestException;
 import dz_spring7.model.User;
@@ -12,11 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
 import java.io.IOException;
 
 @Controller
-public class UserController {
+public class UserController extends UtilsController<User> {
 
     private UserService userService;
     private UserDAO userDAO;
@@ -30,7 +28,7 @@ public class UserController {
     @RequestMapping (method = RequestMethod.POST, value = "/saveUser", produces = "text/plain")
     public @ResponseBody
     String save(HttpServletRequest req) throws IOException, BadRequestException {
-        User user = mappingUser(req);
+        User user = mappingObject(req);
         System.out.println("User after mapping: " + user);
 
         try {
@@ -61,28 +59,6 @@ public class UserController {
             throw e;
         }
         return "User deleted success";
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/users", produces = "text/plain")
-    @ResponseBody
-    public String getAll()throws BadRequestException{
-        return userService.getUsers().toString();
-    }
-
-    private User mappingUser(HttpServletRequest req)throws IOException{
-        StringBuilder stringBuilder = new StringBuilder();
-
-        try(BufferedReader reader = req.getReader()) {
-            String line;
-
-            while ((line = reader.readLine()) != null){
-                stringBuilder.append(line);
-            }
-        }
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String input = objectMapper.writeValueAsString(stringBuilder.toString());
-        return objectMapper.convertValue(input, User.class);
     }
 
     public void setUserService(UserService userService) {

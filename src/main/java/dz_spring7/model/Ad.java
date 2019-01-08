@@ -8,9 +8,10 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 @Entity
-@Table(name = "MESSAGE")
+@Table(name = "AD")
 public class Ad extends IdEntity{
     private Long id;
     private User user;
@@ -18,15 +19,16 @@ public class Ad extends IdEntity{
     private String description;
     private Integer price;
     private CurrencyType currencyType;
+    private CategoryType categoryType;
     private List<Category> categories;
 
     public Ad() {
     }
 
     @Id
-    @SequenceGenerator(name = "MSG_SQ", sequenceName = "MESSAGE_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MSG_SQ")
-    @Column(name = "ID_MESSAGE")
+    @SequenceGenerator(name = "AD_SQ", sequenceName = "AD_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "AD_SQ")
+    @Column(name = "ID_AD")
     @Override
     public Long getId() {
         return id;
@@ -38,12 +40,12 @@ public class Ad extends IdEntity{
         return user;
     }
 
-    @Column(name = "MESSAGE_NAME", nullable = false)
+    @Column(name = "AD_NAME", nullable = false)
     public String getName() {
         return name;
     }
 
-    @Column(name = "MESSAGE_DESCRIPTION", nullable = false)
+    @Column(name = "AD_DESCRIPTION", nullable = false)
     public String getDescription() {
         return description;
     }
@@ -59,8 +61,14 @@ public class Ad extends IdEntity{
         return currencyType;
     }
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "CATEGORY_TYPE", nullable = false)
+    public CategoryType getCategoryType() {
+        return categoryType;
+    }
+
     @JsonIgnore
-    @OneToMany(mappedBy = "message", fetch = FetchType.LAZY, targetEntity = Category.class)
+    @OneToOne(mappedBy = "ad", fetch = FetchType.LAZY, targetEntity = Category.class)
     public List<Category> getCategories() {
         return categories;
     }
@@ -102,6 +110,10 @@ public class Ad extends IdEntity{
         this.currencyType = currencyType;
     }
 
+    public void setCategoryType(CategoryType categoryType) {
+        this.categoryType = categoryType;
+    }
+
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
@@ -111,30 +123,32 @@ public class Ad extends IdEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ad ad = (Ad) o;
-        return price.equals(ad.price) &&
-                Objects.equals(id, ad.id) &&
-                Objects.equals(user, ad.user) &&
-                Objects.equals(name, ad.name) &&
-                Objects.equals(description, ad.description) &&
+        return id.equals(ad.id) &&
+                user.equals(ad.user) &&
+                name.equals(ad.name) &&
+                description.equals(ad.description) &&
+                price.equals(ad.price) &&
                 currencyType == ad.currencyType &&
-                Objects.equals(categories, ad.categories);
+                categoryType == ad.categoryType &&
+                categories.equals(ad.categories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, name, description, price, currencyType, categories);
+        return Objects.hash(id, user, name, description, price, currencyType, categoryType, categories);
     }
 
     @Override
     public String toString() {
-        return "Ad{" +
-                "id=" + id +
-                ", user=" + user +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", currencyType=" + currencyType +
-                ", categories=" + categories +
-                '}';
+        return new StringJoiner(", ", Ad.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("user=" + user)
+                .add("name='" + name + "'")
+                .add("description='" + description + "'")
+                .add("price=" + price)
+                .add("currencyType=" + currencyType)
+                .add("categoryType=" + categoryType)
+                .add("categories=" + categories)
+                .toString();
     }
 }

@@ -6,8 +6,6 @@ import dz_spring7.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserService {
 
@@ -34,13 +32,6 @@ public class UserService {
         }
 
         userDAO.delete(id);
-    }
-
-    public List<User> getUsers()throws BadRequestException{
-        if (userDAO.findAll() == null)
-            throw new BadRequestException("List is not exist.");
-
-        return userDAO.findAll();
     }
 
     public void setUserDAO(UserDAO userDAO) {

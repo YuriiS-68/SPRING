@@ -1,6 +1,5 @@
 package dz_spring7.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dz_spring7.dao.AdDAO;
 import dz_spring7.execption.BadRequestException;
 import dz_spring7.model.Ad;
@@ -12,11 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
 import java.io.IOException;
 
 @Controller
-public class AdController {
+public class AdController extends UtilsController<Ad> {
 
     private AdService adService;
     private AdDAO adDAO;
@@ -30,7 +28,7 @@ public class AdController {
     @RequestMapping(method = RequestMethod.POST, value = "/saveAd", produces = "text/plain")
     public @ResponseBody
     String save(HttpServletRequest req) throws IOException, BadRequestException {
-        Ad ad = mappingAd(req);
+        Ad ad = mappingObject(req);
 
         try {
             adService.save(ad);
@@ -45,7 +43,7 @@ public class AdController {
     @RequestMapping(method = RequestMethod.PUT, value = "/updateAd", produces = "text/plain")
     public @ResponseBody
     String update(HttpServletRequest req)throws IOException, BadRequestException{
-        Ad ad = mappingAd(req);
+        Ad ad = mappingObject(req);
         long inputId = Long.parseLong(req.getParameter("adId"));
 
         try {
@@ -80,27 +78,6 @@ public class AdController {
             throw e;
         }
         return "Ad deleted success";
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/ades", produces = "text/plain")
-    @ResponseBody
-    public String getAll()throws BadRequestException{
-        return adService.getAdes().toString();
-    }
-
-    private Ad mappingAd(HttpServletRequest req)throws IOException{
-        StringBuilder stringBuilder = new StringBuilder();
-
-        try(BufferedReader reader = req.getReader()) {
-            String line;
-            while ((line = reader.readLine()) != null){
-                stringBuilder.append(line);
-            }
-        }
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String input = objectMapper.writeValueAsString(stringBuilder.toString());
-        return objectMapper.convertValue(input, Ad.class);
     }
 
     public void setAdService(AdService adService) {

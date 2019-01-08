@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 @Entity
 @Table(name = "SUBCATEGORY")
@@ -31,8 +32,6 @@ public class Subcategory extends IdEntity{
         return id;
     }
 
-    //@OneToMany(mappedBy = "subcategory", fetch = FetchType.LAZY, targetEntity = Category.class)
-    //@ManyToOne(fetch = FetchType.LAZY)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_CATEGORY_SUBCATEGORY")
     public Category getCategory() {
@@ -129,6 +128,19 @@ public class Subcategory extends IdEntity{
 
     @Override
     public String toString() {
+        return new StringJoiner(", ", Subcategory.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("category=" + category)
+                .add("name='" + name + "'")
+                .add("city='" + city + "'")
+                .add("numberPhone='" + numberPhone + "'")
+                .add("dateFrom=" + dateFrom)
+                .add("dateTo=" + dateTo)
+                .toString();
+    }
+
+    /*@Override
+    public String toString() {
         return "Subcategory{" +
                 "id=" + id +
                 ", category=" + category +
@@ -138,5 +150,5 @@ public class Subcategory extends IdEntity{
                 ", dateFrom=" + dateFrom +
                 ", dateTo=" + dateTo +
                 '}';
-    }
+    }*/
 }
