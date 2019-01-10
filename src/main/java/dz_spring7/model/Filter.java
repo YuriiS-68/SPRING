@@ -1,19 +1,19 @@
 package dz_spring7.model;
 
 public class Filter {
-    private Category category;
+    private CategoryType categoryType;
     private String city;
     private String phrase;
 
     public Filter() {
     }
 
-    public Category getCategory() {
-        return category;
+    public CategoryType getCategoryType() {
+        return categoryType;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategory(CategoryType categoryType) {
+        this.categoryType = categoryType;
     }
 
     public String getCity() {

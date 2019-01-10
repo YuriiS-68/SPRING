@@ -6,6 +6,9 @@ import dz_spring7.model.Ad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AdService {
 
@@ -21,6 +24,7 @@ public class AdService {
             throw new BadRequestException("This Ad with ID - " + ad.getId() + " can not save in DB.");
         }
         else {
+            validFields(ad);
             adDAO.save(ad);
         }
         return ad;
@@ -41,14 +45,62 @@ public class AdService {
         adDAO.delete(id);
     }
 
+    private void saveAds(Ad ad){
+        List<Ad> adsSale = new ArrayList<>();
+
+        if (ad != null){
+            adsSale.add(ad);
+        }
+    }
+
     private void validFields(Ad ad)throws BadRequestException {
         if (ad == null){
             throw new BadRequestException("Ad is not exist");
         }
-        if (ad.getId() == null || ad.getUser() == null || ad.getName() == null ||
-                ad.getDescription() == null || ad.getPrice() == null || ad.getCurrencyType() == null){
+
+        if (ad.getId() != null){
+            if (ad.getId() == null || ad.getUser() == null || ad.getName() == null || ad.getDescription() == null
+                    || ad.getPrice() == null){
+                throw new BadRequestException("Check the entered data. One of the object fields is missing.");
+            }
+        }else if (ad.getUser() == null || ad.getName() == null || ad.getDescription() == null || ad.getPrice() == null){
             throw new BadRequestException("Check the entered data. One of the object fields is missing.");
         }
+
+        if (!isValid(ad))
+            throw new BadRequestException("Check the entered data. One of the object fields is missing.");
+
+        if (isValidCurrencyType(ad))
+            throw new BadRequestException("The Ad with ID " + ad.getId() + " has invalid CurrencyType.");
+
+        if (isValidCategory(ad))
+            throw new BadRequestException("The Ad with ID " + ad.getId() + " has invalid Category.");
+
+        if (isValidSubcategory(ad))
+            throw new BadRequestException("The Ad with ID " + ad.getId() + " has invalid Subcategory.");
+
+    }
+
+    private boolean isValid(Ad ad){
+        return ad.getCity() != null && ad.getNumberPhone() != null && ad.getDateFrom() != null && ad.getDateTo() != null
+                && ad.getCategoryType() != null && ad.getSubcategoryType() != null && ad.getCurrencyType() != null;
+    }
+
+    private boolean isValidCurrencyType(Ad ad){
+        return (ad.getCurrencyType() == null || ad.getCurrencyType().toString().equalsIgnoreCase("USD"))
+                && (ad.getCurrencyType() == null || ad.getCurrencyType().toString().equalsIgnoreCase("EUR"))
+                && (ad.getCurrencyType() == null || ad.getCurrencyType().toString().equalsIgnoreCase("UAH"));
+    }
+
+    private boolean isValidCategory(Ad ad){
+        return (ad.getCategoryType() == null || !ad.getCategoryType().toString().equalsIgnoreCase("SALE")) &&
+                (ad.getCategoryType() == null || !ad.getCategoryType().toString().equalsIgnoreCase("BUY"));
+    }
+
+    private boolean isValidSubcategory(Ad ad){
+        return (ad.getSubcategoryType() == null || !ad.getSubcategoryType().toString().equalsIgnoreCase("AUTO"))
+                && (ad.getSubcategoryType() == null || !ad.getSubcategoryType().toString().equalsIgnoreCase("HOUSES"))
+                && (ad.getSubcategoryType() == null || !ad.getSubcategoryType().toString().equalsIgnoreCase("APARTMENTS"));
     }
 
     public void setAdDAO(AdDAO adDAO) {

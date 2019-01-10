@@ -6,8 +6,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class UtilsController<T> implements ControllerEntity<T> {
+    private static final DateFormat FORMAT = new SimpleDateFormat("dd-MM-yyyy'T'hh:mm");
     private Class<T> type;
 
     @SuppressWarnings("unchecked")
@@ -18,6 +21,7 @@ public class UtilsController<T> implements ControllerEntity<T> {
     public T mappingObject(HttpServletRequest req)throws IOException{
         ObjectMapper objectMapper = new ObjectMapper();
 
+        objectMapper.setDateFormat(FORMAT);
         String input = objectMapper.writeValueAsString(getString(req));
         return objectMapper.convertValue(input, type);
     }

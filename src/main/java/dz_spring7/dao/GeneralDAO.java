@@ -8,8 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 @Repository
 @Transactional
@@ -17,7 +15,6 @@ public abstract class GeneralDAO <T extends IdEntity> implements GenericEntityDA
 
     @PersistenceContext
     private EntityManager entityManager;
-    private static final DateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy hh.mm.ss");
     private Class<T> type;
 
     @SuppressWarnings("unchecked")
@@ -48,10 +45,6 @@ public abstract class GeneralDAO <T extends IdEntity> implements GenericEntityDA
 
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
-    }
-
-    public static DateFormat getFORMAT() {
-        return FORMAT;
     }
 
     public Class<T> getType() {

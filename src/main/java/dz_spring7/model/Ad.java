@@ -1,12 +1,12 @@
 package dz_spring7.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.persistence.*;
 import java.io.IOException;
-import java.util.List;
+import java.util.Date;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -18,9 +18,13 @@ public class Ad extends IdEntity{
     private String name;
     private String description;
     private Integer price;
+    private String city;
+    private String numberPhone;
+    private Date dateFrom;
+    private Date dateTo;
     private CurrencyType currencyType;
     private CategoryType categoryType;
-    private List<Category> categories;
+    private SubcategoryType subcategoryType;
 
     public Ad() {
     }
@@ -55,6 +59,28 @@ public class Ad extends IdEntity{
         return price;
     }
 
+    @Column(name = "CITY", nullable = false)
+    public String getCity() {
+        return city;
+    }
+
+    @Column(name = "NUMBER_PHONE", nullable = false)
+    public String getNumberPhone() {
+        return numberPhone;
+    }
+
+    @Column(name = "DATE_FROM", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy'T'hh:mm")
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    @Column(name = "DATE_TO", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy'T'hh:mm")
+    public Date getDateTo() {
+        return dateTo;
+    }
+
     @Enumerated(EnumType.STRING)
     @Column(name = "CURRENCY_TYPE", nullable = false)
     public CurrencyType getCurrencyType() {
@@ -67,10 +93,10 @@ public class Ad extends IdEntity{
         return categoryType;
     }
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "ad", fetch = FetchType.LAZY, targetEntity = Category.class)
-    public List<Category> getCategories() {
-        return categories;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "SUBCATEGORY_TYPE", nullable = false)
+    public SubcategoryType getSubcategoryType() {
+        return subcategoryType;
     }
 
     @JsonCreator
@@ -106,6 +132,22 @@ public class Ad extends IdEntity{
         this.price = price;
     }
 
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setNumberPhone(String numberPhone) {
+        this.numberPhone = numberPhone;
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
+    }
+
     public void setCurrencyType(CurrencyType currencyType) {
         this.currencyType = currencyType;
     }
@@ -114,8 +156,8 @@ public class Ad extends IdEntity{
         this.categoryType = categoryType;
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public void setSubcategoryType(SubcategoryType subcategoryType) {
+        this.subcategoryType = subcategoryType;
     }
 
     @Override
@@ -128,14 +170,18 @@ public class Ad extends IdEntity{
                 name.equals(ad.name) &&
                 description.equals(ad.description) &&
                 price.equals(ad.price) &&
+                city.equals(ad.city) &&
+                numberPhone.equals(ad.numberPhone) &&
+                dateFrom.equals(ad.dateFrom) &&
+                dateTo.equals(ad.dateTo) &&
                 currencyType == ad.currencyType &&
                 categoryType == ad.categoryType &&
-                categories.equals(ad.categories);
+                subcategoryType == ad.subcategoryType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, name, description, price, currencyType, categoryType, categories);
+        return Objects.hash(id, user, name, description, price, city, numberPhone, dateFrom, dateTo, currencyType, categoryType, subcategoryType);
     }
 
     @Override
@@ -146,9 +192,13 @@ public class Ad extends IdEntity{
                 .add("name='" + name + "'")
                 .add("description='" + description + "'")
                 .add("price=" + price)
+                .add("city='" + city + "'")
+                .add("numberPhone='" + numberPhone + "'")
+                .add("dateFrom=" + dateFrom)
+                .add("dateTo=" + dateTo)
                 .add("currencyType=" + currencyType)
                 .add("categoryType=" + categoryType)
-                .add("categories=" + categories)
+                .add("subcategoryType=" + subcategoryType)
                 .toString();
     }
 }
