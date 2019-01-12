@@ -18,6 +18,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
+import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)
@@ -97,7 +98,8 @@ public class AppConfig {
 
     /*private Properties additionalProperties(){
         Properties properties = new Properties();
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle10gDialect");
+        //properties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle10gDialect");
+        properties.setProperty("sessionFactory", "sessionFactory");
 
         return properties;
     }*/

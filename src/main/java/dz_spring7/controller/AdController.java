@@ -80,6 +80,12 @@ public class AdController extends UtilsController<Ad> {
         return "Ad deleted success";
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/getAds", produces = "text/plain")
+    public @ResponseBody
+    String getAds(){
+        return adService.get100Ads().toString();
+    }
+
     public void setAdService(AdService adService) {
         this.adService = adService;
     }

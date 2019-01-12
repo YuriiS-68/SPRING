@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -45,12 +46,23 @@ public class AdService {
         adDAO.delete(id);
     }
 
-    private void saveAds(Ad ad){
+    public List<Ad> get100Ads(){
+        return adDAO.get100Ad();
+    }
+
+    private boolean isValidDateAd(Date currentDate, Date adDate){
+        return adDate.compareTo(currentDate) > 0;
+    }
+
+    private List<Ad> getAds(Ad ad){
         List<Ad> adsSale = new ArrayList<>();
 
         if (ad != null){
             adsSale.add(ad);
         }
+
+
+        return new ArrayList<>();
     }
 
     private void validFields(Ad ad)throws BadRequestException {

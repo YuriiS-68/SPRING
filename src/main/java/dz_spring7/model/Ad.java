@@ -188,7 +188,7 @@ public class Ad extends IdEntity{
     public String toString() {
         return new StringJoiner(", ", Ad.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
-                .add("user=" + user)
+                .add("user=" + user.getId())
                 .add("name='" + name + "'")
                 .add("description='" + description + "'")
                 .add("price=" + price)
