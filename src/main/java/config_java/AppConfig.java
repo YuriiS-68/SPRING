@@ -1,6 +1,7 @@
 package config_java;
 
 import dz_spring7.controller.AdController;
+import dz_spring7.controller.FilterController;
 import dz_spring7.controller.UserController;
 import dz_spring7.dao.AdDAO;
 import dz_spring7.dao.UserDAO;
@@ -63,6 +64,13 @@ public class AppConfig {
         userController.setUserService(userService());
         userController.setUserDAO(userDAO());
         return userController;
+    }
+
+    @Bean
+    public FilterController filterController(){
+        FilterController filterController = new FilterController(adService());
+        filterController.setAdService(adService());
+        return filterController;
     }
 
     @Bean

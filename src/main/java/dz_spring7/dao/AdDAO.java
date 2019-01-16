@@ -7,9 +7,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TemporalType;
-import javax.persistence.TypedQuery;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -17,15 +14,11 @@ import java.util.List;
 @Transactional
 public class AdDAO extends GeneralDAO<Ad> {
 
-    private static final DateFormat FORMAT = new SimpleDateFormat("dd-MM-yyyy'T'hh:mm");
     @SuppressWarnings("SqlResolve")
-    private static final String SQL_GET_ADS_BY_CURRENT_DATE = "SELECT * FROM AD WHERE ROWNUM < 101 AND DATE_TO > ?1 ORDER BY DATE_TO DESC";
-    private static final String SQL_GET_ADS_BY_FILTER = "SELECT * FROM ";
+    private static final String SQL_GET_ADS_BY_CURRENT_DATE = "SELECT * FROM AD WHERE ROWNUM < 101 AND DATE_TO > ? ORDER BY DATE_TO DESC";
+    private static final String SQL_GET_ADS_BY_FILTER = "SELECT * FROM AD WHERE ROWNUM < 101 AND DATE_TO > ? AND AD_DESCRIPTION LIKE ?";
+    private static final String SQL_GET_ADS_BY_FILTER_OUT_DESCRIPTION = "SELECT * FROM AD WHERE ROWNUM < 101 AND DATE_TO > ?";
 
-    //1. получить текущую дату
-    //2. сравнить в запросе текущую дату с датой объекта
-    //3. если дата объекта меньше текущей даты то взять этот объект из базы данных
-    //4. выводить только 100 последних объектов удовлетворяющих условию по дате
     @SuppressWarnings("unchecked")
     public List<Ad> get100Ad(){
         Date currentDate = new Date();
@@ -34,25 +27,45 @@ public class AdDAO extends GeneralDAO<Ad> {
         return query.setParameter(1, currentDate, TemporalType.TIMESTAMP).getResultList();
     }
 
+    @SuppressWarnings("unchecked")
     public List<Ad> findAds(Filter filter){
-        List<Ad> ads;
+        Date currentDate = new Date();
+        String findByWord = filter.getDescription();
+        System.out.println("FindByWord " + findByWord);
 
-        TypedQuery<Ad> query = getEntityManager().createNamedQuery(createQuery(filter), Ad.class);
-        ads = query.getResultList();
+        if (filter.getDescription() == null){
+            NativeQuery<Ad> adQuery = (NativeQuery<Ad>) getEntityManager().createNativeQuery(createQuery(filter), Ad.class);
+            adQuery.setParameter(1, currentDate, TemporalType.TIMESTAMP);
 
-        return ads;
+            return adQuery.getResultList();
+        }
+        else {
+            NativeQuery<Ad> adQuery = (NativeQuery<Ad>) getEntityManager().createNativeQuery(createQuery(filter), Ad.class);
+            adQuery.setParameter(2, "%" + findByWord + "%");
+            adQuery.setParameter(1, currentDate, TemporalType.TIMESTAMP);
+
+            return adQuery.getResultList();
+        }
     }
 
     private String createQuery(Filter filter){
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(SQL_GET_ADS_BY_FILTER);
-
-        if (filter.getCategoryType() != null){
-            //stringBuilder.append()
+        if (filter.getDescription() != null){
+            stringBuilder.append(SQL_GET_ADS_BY_FILTER);
+        }
+        else {
+            stringBuilder.append(SQL_GET_ADS_BY_FILTER_OUT_DESCRIPTION);
         }
 
+        if (filter.getCategoryType() != null){
+            stringBuilder.append(" AND CATEGORY_TYPE = '").append(filter.getCategoryType().toString()).append("'");
+        }
 
-        return stringBuilder.toString();
+        if (filter.getCity() != null){
+            stringBuilder.append(" AND CITY = '").append(filter.getCity()).append("'");
+        }
+
+        return stringBuilder.append(" ORDER BY DATE_TO DESC").toString();
     }
 }

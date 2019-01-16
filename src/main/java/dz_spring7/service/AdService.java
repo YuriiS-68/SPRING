@@ -3,11 +3,10 @@ package dz_spring7.service;
 import dz_spring7.dao.AdDAO;
 import dz_spring7.execption.BadRequestException;
 import dz_spring7.model.Ad;
+import dz_spring7.model.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -50,19 +49,11 @@ public class AdService {
         return adDAO.get100Ad();
     }
 
-    private boolean isValidDateAd(Date currentDate, Date adDate){
-        return adDate.compareTo(currentDate) > 0;
-    }
+    public List<Ad> findAds(Filter filter)throws BadRequestException{
+        if (filter == null)
+            throw new BadRequestException("Filter is not exist");
 
-    private List<Ad> getAds(Ad ad){
-        List<Ad> adsSale = new ArrayList<>();
-
-        if (ad != null){
-            adsSale.add(ad);
-        }
-
-
-        return new ArrayList<>();
+        return adDAO.findAds(filter);
     }
 
     private void validFields(Ad ad)throws BadRequestException {

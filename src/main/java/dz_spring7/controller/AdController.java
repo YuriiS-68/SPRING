@@ -3,6 +3,7 @@ package dz_spring7.controller;
 import dz_spring7.dao.AdDAO;
 import dz_spring7.execption.BadRequestException;
 import dz_spring7.model.Ad;
+import dz_spring7.model.Filter;
 import dz_spring7.service.AdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
