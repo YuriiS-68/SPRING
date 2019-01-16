@@ -30,8 +30,7 @@ public class AdDAO extends GeneralDAO<Ad> {
     @SuppressWarnings("unchecked")
     public List<Ad> findAds(Filter filter){
         Date currentDate = new Date();
-        String findByWord = filter.getDescription();
-        System.out.println("FindByWord " + findByWord);
+        //String findByWord = filter.getDescription();
 
         if (filter.getDescription() == null){
             NativeQuery<Ad> adQuery = (NativeQuery<Ad>) getEntityManager().createNativeQuery(createQuery(filter), Ad.class);
@@ -41,7 +40,7 @@ public class AdDAO extends GeneralDAO<Ad> {
         }
         else {
             NativeQuery<Ad> adQuery = (NativeQuery<Ad>) getEntityManager().createNativeQuery(createQuery(filter), Ad.class);
-            adQuery.setParameter(2, "%" + findByWord + "%");
+            adQuery.setParameter(2, "%" + filter.getDescription() + "%");
             adQuery.setParameter(1, currentDate, TemporalType.TIMESTAMP);
 
             return adQuery.getResultList();

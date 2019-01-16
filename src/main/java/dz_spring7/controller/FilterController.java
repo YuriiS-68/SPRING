@@ -26,7 +26,6 @@ public class FilterController extends UtilsController<Filter> {
     public @ResponseBody
     String findAds(HttpServletRequest req)throws IOException, BadRequestException {
         Filter filter = mappingObject(req);
-        System.out.println("Filter: " + filter.toString());
 
         try {
             return String.valueOf(adService.findAds(filter));

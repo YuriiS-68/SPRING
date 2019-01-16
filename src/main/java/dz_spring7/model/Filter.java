@@ -1,7 +1,6 @@
 package dz_spring7.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -40,9 +39,8 @@ public class Filter {
     }
 
     @JsonCreator
-    public static Filter createFromJson(String jsonString){
+    public static Filter createFromJson(String jsonString) {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(MapperFeature.AUTO_DETECT_FIELDS, true);
 
         Filter filter = null;
 
