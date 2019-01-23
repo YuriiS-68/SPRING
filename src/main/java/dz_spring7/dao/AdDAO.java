@@ -1,5 +1,6 @@
 package dz_spring7.dao;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dz_spring7.model.Ad;
 import dz_spring7.model.Filter;
 import org.hibernate.query.NativeQuery;
@@ -7,8 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TemporalType;
+import javax.persistence.criteria.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Repository("adDAO")
 @Transactional
@@ -16,11 +19,9 @@ public class AdDAO extends GeneralDAO<Ad> {
 
     @SuppressWarnings("SqlResolve")
     private static final String SQL_GET_ADS_BY_CURRENT_DATE = "SELECT * FROM AD WHERE ROWNUM < 101 AND DATE_TO > ? ORDER BY DATE_TO DESC";
-    private static final String SQL_GET_ADS_BY_FILTER = "SELECT * FROM AD WHERE ROWNUM < 101 AND DATE_TO > ? AND AD_DESCRIPTION LIKE ?";
-    private static final String SQL_GET_ADS_BY_FILTER_OUT_DESCRIPTION = "SELECT * FROM AD WHERE ROWNUM < 101 AND DATE_TO > ?";
 
     @SuppressWarnings("unchecked")
-    public List<Ad> get100Ad(){
+    public List<Ad> get100Ad() {
         Date currentDate = new Date();
 
         NativeQuery<Ad> query = (NativeQuery<Ad>) getEntityManager().createNativeQuery(SQL_GET_ADS_BY_CURRENT_DATE, Ad.class);
@@ -28,43 +29,32 @@ public class AdDAO extends GeneralDAO<Ad> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Ad> findAds(Filter filter){
-        Date currentDate = new Date();
-        //String findByWord = filter.getDescription();
+    public List<Ad> findAdsByFilter(Filter filter) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> filtersParams = objectMapper.convertValue(filter, Map.class);
 
-        if (filter.getDescription() == null){
-            NativeQuery<Ad> adQuery = (NativeQuery<Ad>) getEntityManager().createNativeQuery(createQuery(filter), Ad.class);
-            adQuery.setParameter(1, currentDate, TemporalType.TIMESTAMP);
+        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Ad> criteriaQuery = criteriaBuilder.createQuery(Ad.class);
 
-            return adQuery.getResultList();
+        Root<Ad> adRoot = criteriaQuery.from(Ad.class);
+
+        Predicate predicate = criteriaBuilder.conjunction();
+        for (String param : filtersParams.keySet()) {
+            if (filtersParams.get(param) != null) {
+                switch (param) {
+                    case "categoryType":
+                        predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(adRoot.get(param), filter.getCategoryType()));
+                        break;
+                    case "description":
+                        predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(adRoot.get(param), "%" + filtersParams.get(param) + "%"));
+                        break;
+                    case "city":
+                        predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(adRoot.get(param), filtersParams.get(param)));
+                        break;
+                }
+            }
         }
-        else {
-            NativeQuery<Ad> adQuery = (NativeQuery<Ad>) getEntityManager().createNativeQuery(createQuery(filter), Ad.class);
-            adQuery.setParameter(2, "%" + filter.getDescription() + "%");
-            adQuery.setParameter(1, currentDate, TemporalType.TIMESTAMP);
-
-            return adQuery.getResultList();
-        }
-    }
-
-    private String createQuery(Filter filter){
-        StringBuilder stringBuilder = new StringBuilder();
-
-        if (filter.getDescription() != null){
-            stringBuilder.append(SQL_GET_ADS_BY_FILTER);
-        }
-        else {
-            stringBuilder.append(SQL_GET_ADS_BY_FILTER_OUT_DESCRIPTION);
-        }
-
-        if (filter.getCategoryType() != null){
-            stringBuilder.append(" AND CATEGORY_TYPE = '").append(filter.getCategoryType().toString()).append("'");
-        }
-
-        if (filter.getCity() != null){
-            stringBuilder.append(" AND CITY = '").append(filter.getCity()).append("'");
-        }
-
-        return stringBuilder.append(" ORDER BY DATE_TO DESC").toString();
+        criteriaQuery.select(adRoot).where(predicate).orderBy(criteriaBuilder.desc(adRoot.get("dateTo")));
+        return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
 }

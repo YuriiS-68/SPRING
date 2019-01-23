@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Controller
-public class FilterController extends UtilsController<Filter> {
+public class FilterController extends Utils<Filter> {
 
     private AdService adService;
 

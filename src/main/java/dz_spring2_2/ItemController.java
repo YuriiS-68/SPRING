@@ -23,7 +23,7 @@ public class ItemController {
 
         Item item = mappingObject(req);
 
-        System.out.println("Controller, ID Item after mapping - " + item.getId());
+        System.out.println("ControllerEntity, ID Item after mapping - " + item.getId());
 
         if (checkId(item))
             return "Item with id " + item.getId() + " can`t be registered in the database";

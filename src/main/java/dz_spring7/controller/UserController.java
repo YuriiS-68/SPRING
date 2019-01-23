@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Controller
-public class UserController extends UtilsController<User> {
+public class UserController extends Utils<User> {
 
     private UserService userService;
     private UserDAO userDAO;

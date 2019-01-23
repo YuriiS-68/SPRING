@@ -53,7 +53,7 @@ public class AdService {
         if (filter == null)
             throw new BadRequestException("Filter is not exist");
 
-        return adDAO.findAds(filter);
+        return adDAO.findAdsByFilter(filter);
     }
 
     private void validFields(Ad ad)throws BadRequestException {

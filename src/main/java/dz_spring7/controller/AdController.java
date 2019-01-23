@@ -3,7 +3,6 @@ package dz_spring7.controller;
 import dz_spring7.dao.AdDAO;
 import dz_spring7.execption.BadRequestException;
 import dz_spring7.model.Ad;
-import dz_spring7.model.Filter;
 import dz_spring7.service.AdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Controller
-public class AdController extends UtilsController<Ad> {
+public class AdController extends Utils<Ad> {
 
     private AdService adService;
     private AdDAO adDAO;

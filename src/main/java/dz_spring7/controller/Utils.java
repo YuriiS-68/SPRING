@@ -9,16 +9,16 @@ import java.lang.reflect.ParameterizedType;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class UtilsController<T> implements ControllerEntity<T> {
+public class Utils<T> {
     private static final DateFormat FORMAT = new SimpleDateFormat("dd-MM-yyyy'T'hh:mm");
     private Class<T> type;
 
     @SuppressWarnings("unchecked")
-    public UtilsController() {
+    public Utils() {
         this.type = ((Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
     }
 
-    public T mappingObject(HttpServletRequest req)throws IOException{
+    T mappingObject(HttpServletRequest req)throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
         objectMapper.setDateFormat(FORMAT);
@@ -26,7 +26,7 @@ public class UtilsController<T> implements ControllerEntity<T> {
         return objectMapper.convertValue(input, type);
     }
 
-    private String getString(HttpServletRequest req)throws IOException{
+    private static String getString(HttpServletRequest req)throws IOException{
         StringBuilder stringBuilder = new StringBuilder();
 
         try (BufferedReader reader = req.getReader()){

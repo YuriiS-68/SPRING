@@ -108,6 +108,7 @@ public class AppConfig {
         Properties properties = new Properties();
         //properties.setProperty("hibernate.dialect", "org.hibernate.dialect.Oracle10gDialect");
         properties.setProperty("sessionFactory", "sessionFactory");
+        properties.setProperty("show_sql", "true");
 
         return properties;
     }*/
